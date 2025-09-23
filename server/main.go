@@ -19,5 +19,5 @@ func main() {
 	server.HandleFunc("GET /flights", func(responseWriter http.ResponseWriter, request *http.Request) {
 		fmt.Fprintf(responseWriter, "handling flights request")
 	})
-	http.ListenAndServe("localhost:3008", server)
+	http.ListenAndServe(":3008", server)
 }
