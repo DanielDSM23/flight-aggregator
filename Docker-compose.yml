@@ -24,6 +24,6 @@ services:
       - JSERVER2_PORT=${JSERVER2_PORT}
       - JSERVER2_NAME=${JSERVER2_NAME}
     ports:
-      - 3001:3001
+      - 3008:3008
     volumes:
       - ./server:/app
