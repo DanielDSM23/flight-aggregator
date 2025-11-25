@@ -4,6 +4,7 @@ import (
 	"aggregator/domain/models"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 )
@@ -13,10 +14,9 @@ type Server1Repository struct {
 }
 
 type FlightServer1 struct {
-	Id        int    `json:"id"`
-	BookingId string `json:"bookingId"`
-	Status    string `json:"status"`
-	// PassengerName    string  `json:"passengerName"`
+	BookingId        string    `json:"bookingId"`
+	Status           string    `json:"status"`
+	PassengerName    string    `json:"passengerName"`
 	FlightNumber     string    `json:"flightNumber"`
 	DepartureAirport string    `json:"departureAirport"`
 	ArrivalAirport   string    `json:"arrivalAirport"`
@@ -32,7 +32,7 @@ func NewServer1Repository() *Server1Repository {
 
 func (Server1Repository *Server1Repository) GetFlights() models.Flights {
 
-	requestURL := "http://j-server1:4001/flights"
+	requestURL := "http://localhost:4001/flights"
 	fmt.Printf("test \n")
 
 	res, err := http.Get(requestURL)
@@ -42,12 +42,20 @@ func (Server1Repository *Server1Repository) GetFlights() models.Flights {
 	fmt.Printf("client: got response!\n")
 	fmt.Printf("client: status code: %d\n", res.StatusCode)
 
+	var unMarshalledData []FlightServer1
+	body, _ := io.ReadAll(res.Body)
+	json.Unmarshal(body, &unMarshalledData)
+
+	fmt.Printf("request result: %#v", unMarshalledData)
+
 	var dataFormatted = models.Flights{}
-	errorRequest := json.NewDecoder(res.Body).Decode(&dataFormatted)
-	if errorRequest != nil {
-		fmt.Println(errorRequest)
-		return dataFormatted
-	}
-	fmt.Printf("Parsed data: %+v", dataFormatted)
+	// for
+	// errorRequest := json.NewDecoder(res.Body).Decode(&dataFormatted)
+	// if errorRequest != nil {
+	// 	fmt.Println(errorRequest)
+	// 	return dataFormatted
+	// }
+
+	// fmt.Printf("Parsed data: %+v", dataFormatted)
 	return dataFormatted
 }

@@ -4,26 +4,43 @@ import (
 	"aggregator/domain/models"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 )
 
 type Server2Repository struct {
-	Listflights []FlightServer1
+	Listflights []FlightServer2
+}
+
+type StopInfo struct {
+	Number string    `json:"number"`
+	From   string    `json:"from"`
+	To     string    `json:"to"`
+	Depart time.Time `json:"depart"`
+	Arrive time.Time `json:"arrive"`
+}
+
+type Stop struct {
+	Flight StopInfo `json:"flight"`
+}
+
+type Traveler struct {
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+}
+
+type Total struct {
+	Amount   float32 `json:"amount"`
+	Currency string  `json:"currency"`
 }
 
 type FlightServer2 struct {
-	Id               int       `json:"id"`
-	BookingId        string    `json:"bookingId"`
-	Status           string    `json:"status"`
-	PassengerName    string    `json:"passengerName"`
-	FlightNumber     string    `json:"flightNumber"`
-	DepartureAirport string    `json:"departureAirport"`
-	ArrivalAirport   string    `json:"arrivalAirport"`
-	DepartureTime    time.Time `json:"departureTime"`
-	ArrivalTime      time.Time `json:"arrivalTime"`
-	Price            float64   `json:"price"`
-	Currency         string    `json:"currency"`
+	Reference string   `json:"reference"`
+	Status    string   `json:"status"`
+	Traveler  Traveler `json:"traveler"`
+	Segments  []Stop   `json:"segments"`
+	Total     Total    `json:"total"`
 }
 
 func NewServer2Repository() *Server2Repository {
@@ -40,12 +57,12 @@ func (Server2Repository *Server2Repository) GetFlights() models.Flights {
 	fmt.Printf("client: got response!\n")
 	fmt.Printf("client: status code: %d\n", res.StatusCode)
 
+	var unMarshalledData []FlightServer2
+	body, _ := io.ReadAll(res.Body)
+	json.Unmarshal(body, &unMarshalledData)
+
+	fmt.Printf("Parsed data: %#v", unMarshalledData)
 	var dataFormatted = models.Flights{}
-	errorRequest := json.NewDecoder(res.Body).Decode(&dataFormatted)
-	if errorRequest != nil {
-		fmt.Println(errorRequest)
-		return dataFormatted
-	}
-	fmt.Printf("Parsed data: %+v", dataFormatted)
+
 	return dataFormatted
 }
