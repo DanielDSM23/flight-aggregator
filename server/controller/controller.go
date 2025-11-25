@@ -4,6 +4,7 @@ import (
 	"aggregator/application"
 	"aggregator/domain/ports"
 	"aggregator/repos"
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -17,7 +18,7 @@ func NewController() *Controller {
 }
 
 func (controller *Controller) GetCombinedflights(responseWriter http.ResponseWriter, request *http.Request) {
-	// fmt.Fprintf(responseWriter, "Hello there!")
+
 	FlightServer1Repo := repos.NewServer1Repository()
 	FlightServer2Repo := repos.NewServer2Repository()
 	repos := []ports.Repos{}
@@ -27,7 +28,7 @@ func (controller *Controller) GetCombinedflights(responseWriter http.ResponseWri
 	handler := application.NewHandler(repos)
 
 	data := handler.CombineData()
-	fmt.Println(responseWriter, "data =>", data)
-	// dataJson, _ := json.MarshalIndent(data, "", "  ")
-	// fmt.Println(string(dataJson))
+	var val, _ = json.Marshal(data)
+	var jsonData = string(val)
+	fmt.Fprintf(responseWriter, "%s", jsonData)
 }
