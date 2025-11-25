@@ -3,33 +3,33 @@ package models
 import "time"
 
 type StopInfo struct {
-	number string
-	from   string
-	to     string
-	depart time.Time
-	arrive time.Time
+	Number string
+	From   string
+	To     string
+	Depart time.Time
+	Arrive time.Time
 }
 
 type Stop struct {
-	flight StopInfo
+	Flight StopInfo
 }
 
 type Traveler struct {
-	firstName string
-	lastName  string
+	FirstName string
+	LastName  string
 }
 
 type Total struct {
-	amount   float32
-	currency string
+	Amount   float64
+	Currency string
 }
 
 type Flight struct {
-	reference string
-	status    string
-	traveler  Traveler
-	segments  []Stop
-	total     Total
+	Reference string
+	Status    string
+	Traveler  Traveler
+	Segments  []Stop
+	Total     Total
 }
 
 // type Flight struct {
