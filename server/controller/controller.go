@@ -3,6 +3,7 @@ package controller
 import (
 	"aggregator/application"
 	"aggregator/domain/ports"
+	domain "aggregator/domain/services"
 	"aggregator/repos"
 	"encoding/json"
 	"fmt"
@@ -28,6 +29,16 @@ func (controller *Controller) GetCombinedflights(responseWriter http.ResponseWri
 	handler := application.NewHandler(repos)
 
 	data := handler.CombineData()
+	domain := domain.NewService(nil)
+	filterValue := request.URL.Query().Get("filter")
+	switch filterValue {
+	case "SortByPrice":
+		domain.SortByPrice(&data)
+	case "SortByTimeTravel":
+		domain.SortByTimeTravel(&data)
+	case "SortByDepartureDate":
+		domain.SortByDepartureDate(&data)
+	}
 	var val, _ = json.Marshal(data)
 	var jsonData = string(val)
 	fmt.Fprintf(responseWriter, "%s", jsonData)

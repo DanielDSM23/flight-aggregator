@@ -18,7 +18,7 @@ func NewServer2Repository() *Server2Repository {
 
 func (Server2Repository *Server2Repository) GetFlights() []models.Flight {
 
-	requestURL := "http://localhost:4002/flight_to_book"
+	requestURL := "http://j-server2:4002/flight_to_book"
 	res, err := http.Get(requestURL)
 	if err != nil {
 		fmt.Printf("error making http request: %s\n", err)

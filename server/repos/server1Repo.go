@@ -33,7 +33,7 @@ func NewServer1Repository() *Server1Repository {
 
 func (Server1Repository *Server1Repository) GetFlights() []models.Flight {
 
-	requestURL := "http://localhost:4001/flights"
+	requestURL := "http://j-server1:4001/flights"
 	res, err := http.Get(requestURL)
 	if err != nil {
 		fmt.Printf("error making http request: %s\n", err)
