@@ -46,3 +46,18 @@ func TestSortByPrice(t *testing.T) {
 	assert.Equal(t, 150.0, flights[1].Total.Amount, "150 expected")
 	assert.Equal(t, 200.0, flights[2].Total.Amount, "200 expected")
 }
+
+func TestSortByTimeTravel(t *testing.T) {
+	service := NewService(nil)
+	now := time.Now()
+	flights := []models.Flight{
+		createFlight(100, now, now.Add(3*time.Hour)),
+		createFlight(100, now, now.Add(1*time.Hour)),
+		createFlight(100, now, now.Add(2*time.Hour)),
+	}
+	service.SortByTimeTravel(&flights)
+
+	assert.Equal(t, 1*time.Hour, flights[0].Segments[0].Flight.Arrive.Sub(flights[0].Segments[0].Flight.Depart), "Should be equal to 1")
+	assert.Equal(t, 2*time.Hour, flights[1].Segments[0].Flight.Arrive.Sub(flights[1].Segments[0].Flight.Depart), "Should be equal to 2")
+	assert.Equal(t, 3*time.Hour, flights[2].Segments[0].Flight.Arrive.Sub(flights[2].Segments[0].Flight.Depart), "Should be equald to 3")
+}
