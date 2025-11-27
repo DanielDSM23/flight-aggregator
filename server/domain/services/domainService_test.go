@@ -61,3 +61,19 @@ func TestSortByTimeTravel(t *testing.T) {
 	assert.Equal(t, 2*time.Hour, flights[1].Segments[0].Flight.Arrive.Sub(flights[1].Segments[0].Flight.Depart), "Should be equal to 2")
 	assert.Equal(t, 3*time.Hour, flights[2].Segments[0].Flight.Arrive.Sub(flights[2].Segments[0].Flight.Depart), "Should be equald to 3")
 }
+
+func TestSortByDepartureDate(t *testing.T) {
+	service := NewService(nil)
+	now := time.Now()
+	flights := []models.Flight{
+		createFlight(100, now.Add(3*time.Hour), now.Add(4*time.Hour)),
+		createFlight(100, now.Add(1*time.Hour), now.Add(2*time.Hour)),
+		createFlight(100, now.Add(2*time.Hour), now.Add(3*time.Hour)),
+	}
+
+	service.SortByDepartureDate(&flights)
+
+	assert.True(t, flights[0].Segments[0].Flight.Depart.Before(flights[1].Segments[0].Flight.Depart), "Should be true")
+	assert.True(t, flights[1].Segments[0].Flight.Depart.Before(flights[2].Segments[0].Flight.Depart), "Should be true")
+	assert.Equal(t, now.Add(1*time.Hour), flights[0].Segments[0].Flight.Depart)
+}
