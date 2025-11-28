@@ -40,6 +40,14 @@ func (controller *Controller) GetCombinedflights(responseWriter http.ResponseWri
 		domain.SortByDepartureDate(&data)
 	}
 	var val, _ = json.Marshal(data)
-	var jsonData = string(val)
-	fmt.Fprintf(responseWriter, "%s", jsonData)
+	writeResponse(responseWriter, http.StatusOK, val)
+
+}
+
+func writeResponse(w http.ResponseWriter, statusCode int, b []byte) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+
+	fmt.Fprintf(w, "%s", b)
+
 }

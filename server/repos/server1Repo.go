@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -48,28 +47,27 @@ func (Server1Repository *Server1Repository) GetFlights() []models.Flight {
 	var dataFormatted = []models.Flight{}
 
 	for _, v := range unMarshalledData {
-		stringSlice := strings.Split(v.PassengerName, " ")
-		var firstname = stringSlice[0]
-		var lastname string
+		// stringSlice := strings.Split(v.PassengerName, " ")
+		// var firstname = stringSlice[0]
+		// var lastname string
 
-		for j, value := range stringSlice {
-			if j > 0 && len(stringSlice) > 2 {
-				lastname += value + " "
-			} else if j > 0 && len(stringSlice) == 2 {
-				lastname += value
-			}
-		}
+		// for j, value := range stringSlice {
+		// 	if j > 0 && len(stringSlice) > 2 {
+		// 		lastname += value + " "
+		// 	} else if j > 0 && len(stringSlice) == 2 {
+		// 		lastname += value
+		// 	}
+		// }
 
 		var stopInfo = models.StopInfo{Number: v.FlightNumber, From: v.DepartureAirport, To: v.ArrivalAirport, Depart: v.DepartureTime, Arrive: v.ArrivalTime}
 
-		var stop = models.Stop{Flight: stopInfo}
-		stopArray := []models.Stop{}
-		stopArray = append(stopArray, stop)
+		stopArray := []models.StopInfo{}
+		stopArray = append(stopArray, stopInfo)
 
-		var travelers = models.Traveler{FirstName: firstname, LastName: lastname}
+		// var travelers = models.Traveler{FirstName: firstname, LastName: lastname}
 		var total = models.Total{Amount: v.Price, Currency: v.Currency}
 
-		var flightToAppend = models.Flight{Reference: v.BookingId, Status: v.Status, Traveler: travelers, Segments: stopArray, Total: total}
+		var flightToAppend = models.Flight{Reference: v.BookingId, Status: v.Status, Segments: stopArray, Total: total}
 		dataFormatted = append(dataFormatted, flightToAppend)
 	}
 

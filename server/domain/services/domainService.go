@@ -3,6 +3,7 @@ package domain
 import (
 	"aggregator/application"
 	"aggregator/domain/models"
+	"fmt"
 	"sort"
 )
 
@@ -27,13 +28,17 @@ func (s *Service) SortByTimeTravel(data *[]models.Flight) {
 		flightA := (*data)[i]
 		flightB := (*data)[j]
 		lastSegmentIndexA := len(flightA.Segments) - 1
-		durationA := flightA.Segments[lastSegmentIndexA].Flight.Arrive.Sub(
-			flightA.Segments[0].Flight.Depart,
+		durationA := flightA.Segments[lastSegmentIndexA].Arrive.Sub(
+			flightA.Segments[0].Depart,
 		)
+		fmt.Println(durationA)
 		lastSegmentIndexB := len(flightB.Segments) - 1
-		durationB := flightB.Segments[lastSegmentIndexB].Flight.Arrive.Sub(
-			flightB.Segments[0].Flight.Depart,
+		durationB := flightB.Segments[lastSegmentIndexB].Arrive.Sub(
+			flightB.Segments[0].Depart,
 		)
+
+		fmt.Println(durationB)
+
 		return durationA < durationB
 	})
 
@@ -41,8 +46,8 @@ func (s *Service) SortByTimeTravel(data *[]models.Flight) {
 
 func (s *Service) SortByDepartureDate(data *[]models.Flight) {
 	sort.Slice(*data, func(i, j int) bool {
-		departTimeI := (*data)[i].Segments[0].Flight.Depart
-		departTimeJ := (*data)[j].Segments[0].Flight.Depart
+		departTimeI := (*data)[i].Segments[0].Depart
+		departTimeJ := (*data)[j].Segments[0].Depart
 
 		return departTimeI.Before(departTimeJ)
 	})
