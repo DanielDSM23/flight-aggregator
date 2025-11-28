@@ -1,58 +1,52 @@
-# Flight Aggregator
+# Flight Aggregator — Résumé
 
-The goal of the api is to get every flight to a destination and sort it by : 
-    - price,
-    - departure date
-    - travel time
-  
-# exercices : 
-- create a server (http.Server)
-- set 2 routes (http.ServeMux):
-  - GET /health : to verify the healthiness of the server 
-    - set the status response to 200 : w.WriteHeader(http.StatusCreated)
-  - GET /flight.
-- try to get the data of both apis from the server (client requests).
-  - transform the data into structs (json.NewDecoder)
-  - and organize the code to process the data in 2 repositories and extract the data using the same interface.
-- return the flights ordered by price
-- now you want to sort by price, time_travel or departure_date :
-  - pass this information by query/params or body,
-  - create the algorithms,
-  - verify the output
-- Create tests for :
-  - your sorting algorithms,
-  - your flight service :
-    - mock the repositories to make the tests.
+Le projet **Flight Aggregator** permet d’agréger des vols provenant de deux APIs, puis de les trier selon différents critères.
 
-# to help you
+---
 
-## pre-setup
+## Fonctionnalités principales
 
-  - install Docker Compose and start the project with: docker compose up
-  - air is setup to auto reload the project on every modification !
-  - a make file is here to run the tests with gotestsum :
-    - install it with : `go install gotest.tools/gotestsum@latest`
+- Serveur Go (`http.Server`) avec deux routes :
+  - **GET `/health`** → vérifie la santé du serveur
+  - **GET `/flights`** → retourne tous les vols agrégés
+- Récupération des vols depuis deux APIs (`j-server1` et `j-server2`)
+- Décodage JSON → Structs Go
+- Deux repositories utilisant une interface commune
+- Tri disponible :
+  - `SortByPrice`
+  - `SortByTimeTravel`
+  - `SortByDepartureDate`
+- Tests :
+  - tests des algorithmes de tri
+  - tests du service métier avec mocks (`testify`)
 
-## Run the base project: 
-- `docker compose build`
-- `docker compose up`
+---
 
-## test 
-- `make test`
+## Endpoints
 
-## access the apis : 
-- j-server1 :
-  - docker : http://j-server1:4001
-  - localhost : http://localhost:4001
-- j-server2 : 
-  - docker : http://j-server2:4001
-  - localhost : http://localhost:4001
+### GET `/health`
+Retourne `200 OK`.
 
+### GET `/flights`
+Retourne tous les vols agrégés.
 
-startup : 
-- use the Viper library [Link Text](https://github.com/spf13/viper),
-- get every env variables with : viper.AutomaticEnv() 
-- then select with : viper.Get("MY_VAR")
+### GET `/flights?filter=...`
+Filtres disponibles :
+- `/flights?filter=SortByPrice`
+- `/flights?filter=SortByTimeTravel`
+- `/flights?filter=SortByDepartureDate`
 
-tests : 
-- use Testify : [Link Text](https://github.com/stretchr/testify)
+---
+
+## Lancer le projet
+
+```bash
+docker compose build
+docker compose up
+```
+
+## Lancer les tests
+
+```bash
+cd server && gotestsum
+```
