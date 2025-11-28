@@ -21,12 +21,11 @@ func (m *MockRepo) GetFlights() []models.Flight {
 func createFlight(total float64, departure time.Time, arrival time.Time) models.Flight {
 	return models.Flight{
 		Total: models.Total{Amount: total},
-		Segments: []models.Stop{
+		Segments: []models.StopInfo{
 			{
-				Flight: models.StopInfo{
-					Depart: departure,
-					Arrive: arrival,
-				},
+
+				Depart: departure,
+				Arrive: arrival,
 			},
 		},
 	}
@@ -57,9 +56,9 @@ func TestSortByTimeTravel(t *testing.T) {
 	}
 	service.SortByTimeTravel(&flights)
 
-	assert.Equal(t, 1*time.Hour, flights[0].Segments[0].Flight.Arrive.Sub(flights[0].Segments[0].Flight.Depart), "Should be equal to 1")
-	assert.Equal(t, 2*time.Hour, flights[1].Segments[0].Flight.Arrive.Sub(flights[1].Segments[0].Flight.Depart), "Should be equal to 2")
-	assert.Equal(t, 3*time.Hour, flights[2].Segments[0].Flight.Arrive.Sub(flights[2].Segments[0].Flight.Depart), "Should be equald to 3")
+	assert.Equal(t, 1*time.Hour, flights[0].Segments[0].Arrive.Sub(flights[0].Segments[0].Depart), "Should be equal to 1")
+	assert.Equal(t, 2*time.Hour, flights[1].Segments[0].Arrive.Sub(flights[1].Segments[0].Depart), "Should be equal to 2")
+	assert.Equal(t, 3*time.Hour, flights[2].Segments[0].Arrive.Sub(flights[2].Segments[0].Depart), "Should be equald to 3")
 }
 
 func TestSortByDepartureDate(t *testing.T) {
@@ -73,7 +72,7 @@ func TestSortByDepartureDate(t *testing.T) {
 
 	service.SortByDepartureDate(&flights)
 
-	assert.True(t, flights[0].Segments[0].Flight.Depart.Before(flights[1].Segments[0].Flight.Depart), "Should be true")
-	assert.True(t, flights[1].Segments[0].Flight.Depart.Before(flights[2].Segments[0].Flight.Depart), "Should be true")
-	assert.Equal(t, now.Add(1*time.Hour), flights[0].Segments[0].Flight.Depart)
+	assert.True(t, flights[0].Segments[0].Depart.Before(flights[1].Segments[0].Depart), "Should be true")
+	assert.True(t, flights[1].Segments[0].Depart.Before(flights[2].Segments[0].Depart), "Should be true")
+	assert.Equal(t, now.Add(1*time.Hour), flights[0].Segments[0].Depart)
 }

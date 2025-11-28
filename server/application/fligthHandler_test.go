@@ -23,12 +23,10 @@ func createFlight(reference string, total float64, departure time.Time, arrival 
 	return models.Flight{
 		Reference: reference,
 		Total:     models.Total{Amount: total},
-		Segments: []models.Stop{
+		Segments: []models.StopInfo{
 			{
-				Flight: models.StopInfo{
-					Depart: departure,
-					Arrive: arrival,
-				},
+				Depart: departure,
+				Arrive: arrival,
 			},
 		},
 	}
