@@ -1,5 +1,8 @@
-# Flight Aggregator — Résumé
 
+# Groupe
+David Chau, Daniel Monteiro, Brian MADAPATHAGE SENANAYAKE, Prashath Sivayanama
+
+# Flight Aggregator — Résumé
 Le projet **Flight Aggregator** permet d’agréger des vols provenant de deux APIs, puis de les trier selon différents critères.
 
 ---
